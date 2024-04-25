@@ -14,7 +14,7 @@ int get_ch_power(int sys_handle, int slot, int chan);
 
 float get_ch_vmon(int sys_handle, int slot, int chan);
 
-void set_ch_v0(int sys_handle, int slot, int chan, int value);
+void set_ch_v0(int sys_handle, int slot, int chan, float value);
 void set_ch_pw(int sys_handle, int slot, int chan, int value);
 
 
