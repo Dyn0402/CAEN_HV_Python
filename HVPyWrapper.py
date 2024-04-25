@@ -25,9 +25,13 @@ class HVPyWrapper:
         self.log_out = self.library.log_out
         self.log_out.argtypes = [ctypes.c_int]
 
-        # Define the function prototype for free
-        self.free = self.library.free
-        self.free.argtypes = [ctypes.c_void_p]
+        # Define the function prototype for get_ch_power
+        self.get_ch_power = self.library.get_ch_power
+        self.get_ch_power.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
+
+        # Define the function prototype for get_ch_vmon
+        self.get_ch_vmon = self.library.get_ch_vmon
+        self.get_ch_vmon.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
 
     def log_in_wrapper(self, ip_address, username, password):
         # Convert Python strings to bytes
@@ -38,12 +42,20 @@ class HVPyWrapper:
         # Call the C function with the bytes and integer parameters
         sys_handle = self.log_in(ip_bytes, username_bytes, password_bytes)
 
-        # Free the memory allocated by the C function
-        # self.free(result_ptr)
-
         # Return the result value
         return sys_handle
 
     def log_out_wrapper(self, sys_handle):
         # Call the C function with the integer parameter
         self.log_out(sys_handle)
+
+    def get_ch_power_wrapper(self, sys_handle, slot, channel):
+        # Call the C function with the integer parameter
+        power = self.get_ch_power(sys_handle, slot, channel)
+        return power
+
+
+    def get_ch_vmon_wrapper(self, sys_handle, slot, channel):
+        # Call the C function with the integer parameter
+        vmon = self.get_ch_vmon(sys_handle, slot, channel)
+        return vmon
