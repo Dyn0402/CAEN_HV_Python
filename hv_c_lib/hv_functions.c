@@ -34,6 +34,16 @@ void get_crate_map(int sys_handle) {
 
     if (ret == CAENHV_OK) {
 		printf("Crate Map good\n");
+		printf("Number of slots: %d\n", NrOfSl);
+		for (int i = 0; i < NrOfSl; i++) {
+			printf("Slot %d\n", i);
+			printf("Model: %s\n", ModelList + i * 16);
+			printf("Description: %s\n", DescriptionList + i * 16);
+			printf("Serial number: %d\n", SerNumList[i]);
+			printf("Firmware min: %d\n", FmwRelMinList[i]);
+			printf("Firmware max: %d\n", FmwRelMaxList[i]);
+			printf("Number of channels: %d\n", NrOfCh[i]);
+		}
 	}
     else {
 		printf("Crate Map bad\n");
@@ -89,5 +99,18 @@ void set_ch_v0(int sys_handle, int slot, int chan, int value) {
 	}
 	else {
 		printf("Voltage set bad\n");
+	}
+}
+
+
+void set_ch_pw(int sys_handle, int slot, int chan, int value) {
+	unsigned short ch_list[] = { chan };
+	unsigned short ch_value[] = { value };
+	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_value);
+	if (ret == CAENHV_OK) {
+		printf("Power set good\n");
+	}
+	else {
+		printf("Power set bad\n");
 	}
 }

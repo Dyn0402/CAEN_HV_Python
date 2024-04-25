@@ -33,6 +33,14 @@ class HVPyWrapper:
         self.get_ch_vmon = self.library.get_ch_vmon
         self.get_ch_vmon.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
 
+        # Define the function prototype for set_ch_v0
+        self.set_ch_v0 = self.library.set_ch_v0
+        self.set_ch_v0.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_float]
+
+        # Define the function prototype for set_ch_pw
+        self.set_ch_pw = self.library.set_ch_pw
+        self.set_ch_pw.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
+
     def log_in_wrapper(self, ip_address, username, password):
         # Convert Python strings to bytes
         ip_bytes = ip_address.encode('utf-8')
@@ -54,8 +62,15 @@ class HVPyWrapper:
         power = self.get_ch_power(sys_handle, slot, channel)
         return power
 
-
     def get_ch_vmon_wrapper(self, sys_handle, slot, channel):
         # Call the C function with the integer parameter
         vmon = self.get_ch_vmon(sys_handle, slot, channel)
         return vmon
+
+    def set_ch_v0_wrapper(self, sys_handle, slot, channel, voltage):
+        # Call the C function with the integer parameter
+        self.set_ch_v0(sys_handle, slot, channel, voltage)
+
+    def set_ch_pw_wrapper(self, sys_handle, slot, channel, pw):
+        # Call the C function with the integer parameter
+        self.set_ch_pw(sys_handle, slot, channel, pw)
