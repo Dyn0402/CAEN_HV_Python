@@ -19,7 +19,7 @@ class HVPyWrapper:
         # Define the function prototype for log_in
         self.log_in = self.library.log_in
         self.log_in.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
-        self.log_in.restype = ctypes.POINTER(ctypes.c_int)
+        self.log_in.restype = ctypes.c_int
 
         # Define the function prototype for log_out
         self.log_out = self.library.log_out
