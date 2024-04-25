@@ -7,15 +7,15 @@
 #include "CAENHVWrapper.h"
 
 int log_in(char* ip_address, char* username, char* password);
-void get_crate_map(int sys_handle);
-void log_out(int sys_handle);
+bool get_crate_map(int sys_handle, bool verbose);
+bool log_out(int sys_handle);
 
 int get_ch_power(int sys_handle, int slot, int chan);
 
 float get_ch_vmon(int sys_handle, int slot, int chan);
 
-void set_ch_v0(int sys_handle, int slot, int chan, float value);
-void set_ch_pw(int sys_handle, int slot, int chan, int value);
+bool set_ch_v0(int sys_handle, int slot, int chan, float value);
+bool set_ch_pw(int sys_handle, int slot, int chan, int value);
 
 
 #endif

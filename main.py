@@ -13,7 +13,6 @@ from time import sleep
 
 
 def main():
-    lib_path = 'hv_c_lib/libhv_c.so'
     ip_address = '192.168.10.81'
     username = 'admin'
     password = 'admin'
@@ -22,39 +21,45 @@ def main():
     channels = [0, 1, 2, 3, 4]
     v0s = [50, 100, 150, 200, 250]
 
-    with HVPyWrapper(lib_path, ip_address, username, password) as hv_wrapper:
+    with HVPyWrapper(ip_address, username, password) as hv_wrapper:
         print('Turning off channels')
         for channel in channels:
-            hv_wrapper.set_ch_pw_wrapper(slot, channel, 0)
+            power = hv_wrapper.get_ch_power(slot, channel)
+            if power:
+                hv_wrapper.set_ch_pw(slot, channel, 0)
             sleep(1)
 
         sleep(5)
 
         print('Setting channels V0')
         for channel, v0 in zip(channels, v0s):
-            hv_wrapper.set_ch_v0_wrapper(slot, channel, v0)
+            hv_wrapper.set_ch_v0(slot, channel, v0)
             sleep(1)
 
         sleep(5)
 
         print('Turning on channels')
         for channel in channels:
-            hv_wrapper.set_ch_pw_wrapper(slot, channel, 1)
+            power = hv_wrapper.get_ch_power(slot, channel)
+            if not power:
+                hv_wrapper.set_ch_pw(slot, channel, 1)
             sleep(1)
 
         sleep(10)
 
         print('Getting channel power and Vmon')
         for channel in channels:
-            power = hv_wrapper.get_ch_power_wrapper(slot, channel)
-            vmon = hv_wrapper.get_ch_vmon_wrapper(slot, channel)
+            power = hv_wrapper.get_ch_power(slot, channel)
+            vmon = hv_wrapper.get_ch_vmon(slot, channel)
             print(f'Channel {channel} power: {power} Vmon: {vmon}')
 
         sleep(5)
 
         print('Turning off channels')
         for channel in channels:
-            hv_wrapper.set_ch_pw_wrapper(slot, channel, 0)
+            power = hv_wrapper.get_ch_power(slot, channel)
+            if power:
+                hv_wrapper.set_ch_pw(slot, channel, 0)
 
     print('donzo')
 
