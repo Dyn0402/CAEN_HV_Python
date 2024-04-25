@@ -16,7 +16,7 @@ int log_in(char* ip_address, char* username, char* password) {
 		return -1;
     }
 
-	get_crate_map(sys_handle, false);
+	get_crate_map(sys_handle, 0);
 
     return sys_handle;
 }
@@ -43,11 +43,11 @@ int get_crate_map(int sys_handle, int verbose) {
 				printf("Number of channels: %d\n", NrOfCh[i]);
 			}
 		}
-		return true;
+		return 1;
 	}
     else {
 		printf("Crate Map bad\n");
-		return false;
+		return 0;
     }
 }
 
@@ -55,11 +55,11 @@ int get_crate_map(int sys_handle, int verbose) {
 int log_out(int sys_handle) {
 	CAENHVRESULT ret = CAENHV_DeinitSystem(sys_handle);
 	if (ret == CAENHV_OK) {
-		return true;
+		return 1;
 	}
 	else {
 		printf("Shut down bad\n");
-		return false;
+		return 0;
 	}
 }
 
@@ -97,10 +97,10 @@ int set_ch_v0(int sys_handle, int slot, int chan, float value) {
 	float ch_value[] = { value };
 	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "V0Set", 1, ch_list, ch_value);
 	if (ret == CAENHV_OK) {
-		return true;
+		return 1;
 	}
 	else {
-		return false;
+		return 0;
 	}
 }
 
@@ -110,9 +110,9 @@ int set_ch_pw(int sys_handle, int slot, int chan, int value) {
 	unsigned short ch_value[] = { value };
 	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_value);
 	if (ret == CAENHV_OK) {
-		return true;
+		return 1;
 	}
 	else {
-		return false;
+		return 0;
 	}
 }
