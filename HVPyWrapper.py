@@ -36,10 +36,7 @@ class HVPyWrapper:
         password_bytes = password.encode('utf-8')
 
         # Call the C function with the bytes and integer parameters
-        result_ptr = self.log_in(ip_bytes, username_bytes, password_bytes)
-
-        # Get the result value from the pointer
-        sys_handle = result_ptr.contents.value
+        sys_handle = self.log_in(ip_bytes, username_bytes, password_bytes)
 
         # Free the memory allocated by the C function
         # self.free(result_ptr)
