@@ -18,7 +18,7 @@ def main():
     username = 'admin'
     password = 'admin'
 
-    slot = 0
+    slot = 1
     channels = [0, 1, 2, 3, 4]
     v0s = [50, 100, 150, 200, 250]
 
@@ -35,10 +35,10 @@ def main():
         hv_c_lib.set_ch_pw_wrapper(sys_handle, slot, channel, 0)
         sleep(1)
 
-    print('Setting channels V0')
-    for channel, v0 in zip(channels, v0s):
-        hv_c_lib.set_ch_v0_wrapper(sys_handle, slot, channel, v0)
-        sleep(1)
+    # print('Setting channels V0')
+    # for channel, v0 in zip(channels, v0s):
+    #     hv_c_lib.set_ch_v0_wrapper(sys_handle, slot, channel, v0)
+    #     sleep(1)
 
     print('Turning on channels')
     for channel in channels:
