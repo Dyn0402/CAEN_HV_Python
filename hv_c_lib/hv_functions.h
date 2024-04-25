@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "CAENHVWrapper.h"
 
-int log_in(const char* ip_address, const char* username, const char* password);
+int log_in(char* ip_address, char* username, char* password);
 void get_crate_map(int sys_handle);
 void log_out(int sys_handle);
 
