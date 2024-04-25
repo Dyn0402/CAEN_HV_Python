@@ -32,6 +32,7 @@ class HVPyWrapper:
         # Define the function prototype for get_ch_vmon
         self.get_ch_vmon = self.library.get_ch_vmon
         self.get_ch_vmon.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        self.get_ch_vmon.restype = ctypes.c_float
 
         # Define the function prototype for set_ch_v0
         self.set_ch_v0 = self.library.set_ch_v0
