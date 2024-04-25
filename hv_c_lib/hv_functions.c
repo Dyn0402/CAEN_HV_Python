@@ -2,7 +2,7 @@
 
 #include "hv_functions.h"
 
-int log_in(const char* ip_address, const char* username, const char* password) {
+int log_in(char* ip_address, char* username, char* password) {
     int sys_handle = -1;
     CAENHVRESULT ret;
     int sys_type = 3;
@@ -19,7 +19,7 @@ int log_in(const char* ip_address, const char* username, const char* password) {
     }
 
 	printf("System handle is: %d\n", sys_handle);
-	get_crate_map(&sys_handle);
+	get_crate_map(sys_handle);
 
     return sys_handle;
 }
@@ -55,7 +55,7 @@ void log_out(int sys_handle) {
 int get_ch_power(int sys_handle, int slot, int chan) {
 	unsigned short ch_list[] = { chan };
 	unsigned short ch_status[1];
-	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, 1, ch_list, "Pw", ch_status);
+	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_status);
 	if (ret == CAENHV_OK) {
 		printf("Power read good\n");
 	}
@@ -69,7 +69,7 @@ int get_ch_power(int sys_handle, int slot, int chan) {
 float get_ch_vmon(int sys_handle, int slot, int chan) {
 	unsigned short ch_list[] = { chan };
 	float ch_status[1];
-	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, 1, ch_list, "VMon", ch_status);
+	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, "VMon", 1, ch_list, ch_status);
 	if (ret == CAENHV_OK) {
 		printf("Voltage read good\n");
 	}
@@ -83,7 +83,7 @@ float get_ch_vmon(int sys_handle, int slot, int chan) {
 void set_ch_v0(int sys_handle, int slot, int chan, int value) {
 	unsigned short ch_list[] = { chan };
 	unsigned short ch_value[] = { value };
-	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, 1, ch_list, "V0Set", ch_value);
+	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "V0Set", 1, ch_list, ch_value);
 	if (ret == CAENHV_OK) {
 		printf("Voltage set good\n");
 	}
