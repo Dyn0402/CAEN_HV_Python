@@ -3,6 +3,7 @@
 #ifndef HV_FUNCTIONS_H
 #define HV_FUNCTIONS_H
 
+#include <stdio.h>
 #include "CAENHVWrapper.h"
 
 int log_in(const char* ip_address, const char* username, const char* password);

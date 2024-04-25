@@ -2,7 +2,7 @@
 
 #include "hv_functions.h"
 
-void log_in(const char* ip_address, const char* username, const char* password) {
+int log_in(const char* ip_address, const char* username, const char* password) {
     int sys_handle = -1;
     CAENHVRESULT ret;
     int sys_type = 3;
@@ -10,7 +10,7 @@ void log_in(const char* ip_address, const char* username, const char* password) 
     //char arg[30] = "192.168.10.81";
     //char user_name[30] = "admin";
     //char passwd[30] = "admin";
-    ret = CAENHV_InitSystem((CAENHV_SYSTEM_TYPE_t)sys_type, link, ip_address, user_name, passwd, &sys_handle);
+    ret = CAENHV_InitSystem((CAENHV_SYSTEM_TYPE_t)sys_type, link, ip_address, username, password, &sys_handle);
     if (ret == CAENHV_OK) {
         printf("Start good\n");
     }
