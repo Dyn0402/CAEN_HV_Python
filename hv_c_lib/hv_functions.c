@@ -92,7 +92,7 @@ float get_ch_vmon(int sys_handle, int slot, int chan) {
 
 void set_ch_v0(int sys_handle, int slot, int chan, float value) {
 	unsigned short ch_list[] = { chan };
-	unsigned short ch_value[] = { value };
+	float ch_value[] = { value };
 	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "V0Set", 1, ch_list, ch_value);
 	if (ret == CAENHV_OK) {
 		printf("Voltage set good\n");
