@@ -12,7 +12,7 @@ from HVPyWrapper import HVPyWrapper
 
 
 def main():
-    lib_path = 'hv_c_lib/libHV.so'
+    lib_path = 'hv_c_lib/libhv_c.so'
     ip_address = '192.168.10.81'
     username = 'admin'
     password = 'admin'
