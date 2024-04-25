@@ -1,31 +1,40 @@
-# Makefile for the 'hv_c' library on linux
+# Makefile for the 'hv_c' shared library on Linux
 
-# Compiler
-CC = gcc
+GLOBALDIR=      ./
 
-# Compiler flags
-CFLAGS = -Wall -Wextra -Werror -std=c99 -pedantic -g
+LIBRARY=	libhv_c.so
 
-# Source files
-SRC = $(wildcard *.c)
+CC=		gcc
 
-# Object files
-OBJ = $(SRC:.c=.o)
+FLAGS=		-DUNIX -DLINUX -fPIC
 
-# Library name
-LIB = libhv_c.so
+LFLAGS=		-shared -Wl,-soname,$(LIBRARY)
 
-# Default target
-all: $(LIB)
+LIBS=		-lcaenhvwrapper -lncurses -lpthread -ldl -lm
 
-# Compile source files into object files
-%.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+INCLUDEDIR=	-I./$(GLOBALDIR) -I./include/
 
-# Link object files into a shared library
-$(LIB): $(OBJ)
-	$(CC) -shared -o $@ $^
+SOURCES=	$(GLOBALDIR)hv_functions.c
 
-# Clean up
+OBJECTS=	$(SOURCES:.c=.o)
+
+INCLUDES=	hv_functions.h CAENHVWrapper.h
+
+########################################################################
+
+CFLAGS=			$(FLAGS)
+
+all:			$(LIBRARY)
+
+$(LIBRARY):		$(OBJECTS)
+			$(CC) $(CFLAGS) $(LFLAGS) -o $(LIBRARY) $(OBJECTS) $(LIBS)
+
+$(GLOBALDIR)%.o:	$(GLOBALDIR)%.c
+			$(CC) $(CFLAGS) $(INCLUDEDIR) -o $@ -c $<
+
+install:		$(LIBRARY)
+			cp $(LIBRARY) /usr/local/lib
+			ldconfig
+
 clean:
-	rm -f $(OBJ) $(LIB)
+			rm -f $(OBJECTS) $(LIBRARY)
