@@ -6,7 +6,7 @@ LIBRARY=	libhv_c.so
 
 CC=		gcc
 
-FLAGS=		-DUNIX -DLINUX -fPIC
+FLAGS=		-DUNIX -DLINUX -fPIC -std=c99
 
 LFLAGS=		-shared -Wl,-soname,$(LIBRARY)
 
