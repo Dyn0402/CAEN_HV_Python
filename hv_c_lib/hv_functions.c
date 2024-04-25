@@ -22,7 +22,7 @@ int log_in(char* ip_address, char* username, char* password) {
 }
 
 
-bool get_crate_map(int sys_handle, bool verbose) {
+int get_crate_map(int sys_handle, int verbose) {
 	unsigned short NrOfSl, * SerNumList, * NrOfCh;
 	char* ModelList, * DescriptionList;
 	unsigned char* FmwRelMinList, * FmwRelMaxList;
@@ -52,7 +52,7 @@ bool get_crate_map(int sys_handle, bool verbose) {
 }
 
 
-bool log_out(int sys_handle) {
+int log_out(int sys_handle) {
 	CAENHVRESULT ret = CAENHV_DeinitSystem(sys_handle);
 	if (ret == CAENHV_OK) {
 		return true;
@@ -92,7 +92,7 @@ float get_ch_vmon(int sys_handle, int slot, int chan) {
 }
 
 
-bool set_ch_v0(int sys_handle, int slot, int chan, float value) {
+int set_ch_v0(int sys_handle, int slot, int chan, float value) {
 	unsigned short ch_list[] = { chan };
 	float ch_value[] = { value };
 	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "V0Set", 1, ch_list, ch_value);
@@ -105,7 +105,7 @@ bool set_ch_v0(int sys_handle, int slot, int chan, float value) {
 }
 
 
-bool set_ch_pw(int sys_handle, int slot, int chan, int value) {
+int set_ch_pw(int sys_handle, int slot, int chan, int value) {
 	unsigned short ch_list[] = { chan };
 	unsigned short ch_value[] = { value };
 	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_value);

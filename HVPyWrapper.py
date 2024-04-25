@@ -59,7 +59,7 @@ class HVPyWrapper:
         # Define the function prototype for log_out
         log_out = self.library.log_out
         log_out.argtypes = [ctypes.c_int]
-        log_out.restype = ctypes.c_bool
+        log_out.restype = ctypes.c_int
 
         # Call the C function with the integer parameter
         return log_out(self.sys_handle)
@@ -67,8 +67,8 @@ class HVPyWrapper:
     def get_crate_map(self, verbose=True):
         # Define the function prototype for get_crates
         get_crate_map = self.library.get_crate_map
-        get_crate_map.argtypes = [ctypes.c_int, ctypes.c_bool]
-        get_crate_map.restype = ctypes.c_bool
+        get_crate_map.argtypes = [ctypes.c_int, ctypes.c_int]
+        get_crate_map.restype = ctypes.c_int
 
         # Call the C function with the integer parameter
         return get_crate_map(self.sys_handle, verbose)
@@ -94,7 +94,7 @@ class HVPyWrapper:
         # Define the function prototype for set_ch_v0
         set_ch_v0 = self.library.set_ch_v0
         set_ch_v0.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_float]
-        set_ch_v0.restype = ctypes.c_bool
+        set_ch_v0.restype = ctypes.c_int
         # Call the C function with the integer parameter
         return set_ch_v0(self.sys_handle, slot, channel, voltage)
 
@@ -102,6 +102,6 @@ class HVPyWrapper:
         # Define the function prototype for set_ch_pw
         set_ch_pw = self.library.set_ch_pw
         set_ch_pw.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
-        set_ch_pw.restype = ctypes.c_bool
+        set_ch_pw.restype = ctypes.c_int
         # Call the C function with the integer parameter
         return set_ch_pw(self.sys_handle, slot, channel, pw)
