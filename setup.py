@@ -16,14 +16,14 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(
-    name='caen_hv_python',
-    version='1.1',
+    name='caen_hv_py',
+    version='1.6',
     description='Python wrapper for CAEN High Voltage C library.',
     author='Dylan Neff',
     author_email='dneff@ucla.edu',
     url='https://github.com/Dyn0402/CAEN_HV_Python',
-    # packages=['CAEN_HV_Python'],
-    data_files=[('libs', ['hv_c_lib/libhv_c.so'])],
+    packages=['caen_hv_py'],
+    package_data={'caen_hv_py': ['hv_c_lib/libhv_c.so', 'tests/*.py']},
     long_description=long_description,
     long_description_content_type='text/markdown'
 )

@@ -9,6 +9,8 @@ Created as CAEN_HV_Python/CAENHVController.py
 """
 
 import ctypes
+import ctypes.util
+from pkg_resources import resource_filename
 
 
 class CAENHVController:
@@ -20,8 +22,8 @@ class CAENHVController:
     Need to make a call within 15 seconds of the last, otherwise the connection will be lost and the sys_handle will be
     invalid. This is a limitation of the C library.
     """
-    def __init__(self, ip_address, username, password, library_path='hv_c_lib/libhv_c.so'):
-        self.library_path = library_path
+    def __init__(self, ip_address, username, password):
+        self.library_path = resource_filename('caen_hv_py', 'hv_c_lib/libhv_c.so')
         self.ip_address = ip_address
         self.username = username
         self.password = password

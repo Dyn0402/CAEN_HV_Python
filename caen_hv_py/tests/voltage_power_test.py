@@ -8,7 +8,7 @@ Created as CAEN_HV_Python/voltage_power_test.py
 @author: Dylan Neff, Dylan
 """
 
-from caen_hv_python.CAENHVController import CAENHVController
+from caen_hv_py.CAENHVController import CAENHVController
 from time import sleep
 
 
