@@ -3,7 +3,7 @@
 """
 Created on April 25 1:12 PM 2024
 Created in PyCharm
-Created as CAEN_HV_Python/HVPyWrapper.py
+Created as CAEN_HV_Python/CAENHVController.py
 
 @author: Dylan Neff, Dylan
 """
@@ -11,7 +11,7 @@ Created as CAEN_HV_Python/HVPyWrapper.py
 import ctypes
 
 
-class HVPyWrapper:
+class CAENHVController:
     """
     Wrapper class for the CAEN HV C library. This class loads the shared library and defines the function prototypes
     Needed to call the functions in the shared library. The class has methods that call the C functions with the proper

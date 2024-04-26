@@ -10,13 +10,20 @@ Created as CAEN_HV_Python/setup.py
 
 from setuptools import setup
 
+# read the contents of your README file
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
+
 setup(
-    name='CAEN_HV_Python',
-    version='1.0',
+    name='caen_hv_python',
+    version='1.1',
     description='Python wrapper for CAEN High Voltage C library.',
     author='Dylan Neff',
     author_email='dneff@ucla.edu',
     url='https://github.com/Dyn0402/CAEN_HV_Python',
     # packages=['CAEN_HV_Python'],
     data_files=[('libs', ['hv_c_lib/libhv_c.so'])],
+    long_description=long_description,
+    long_description_content_type='text/markdown'
 )

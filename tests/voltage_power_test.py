@@ -3,12 +3,12 @@
 """
 Created on April 25 1:03 PM 2024
 Created in PyCharm
-Created as CAEN_HV_Python/main.py
+Created as CAEN_HV_Python/voltage_power_test.py
 
 @author: Dylan Neff, Dylan
 """
 
-from HVPyWrapper import HVPyWrapper
+from caen_hv_python.CAENHVController import CAENHVController
 from time import sleep
 
 
@@ -21,7 +21,7 @@ def main():
     channels = [0, 1, 2, 3, 4]
     v0s = [50, 100, 150, 200, 250]
 
-    with HVPyWrapper(ip_address, username, password) as hv_wrapper:
+    with CAENHVController(ip_address, username, password) as hv_wrapper:
         print('Turning off channels')
         for channel in channels:
             power = hv_wrapper.get_ch_power(slot, channel)
