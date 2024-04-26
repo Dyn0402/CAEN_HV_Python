@@ -4,7 +4,7 @@ Currently only impelements functions for logging into and out of a CAEN HV crate
 An example implementation is shown below.
 
 ```python
-from caen_hv_python.CAENHVController import CAENHVController
+from caen_hv_py.CAENHVController import CAENHVController
 from time import sleep
 
 ip_address = '192.168.20.20'  # Enter your CAEN HV Crate IP address
