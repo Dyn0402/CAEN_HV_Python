@@ -50,7 +50,8 @@ with CAENHVController(ip_address, username, password) as hv_wrapper:
     for channel in channels:
         power = hv_wrapper.get_ch_power(slot, channel)
         vmon = hv_wrapper.get_ch_vmon(slot, channel)
-        print(f'Channel {channel} power: {power} Vmon: {vmon}')
+        imon = hv_wrapper.get_ch_imon(slot, channel)
+        print(f'Channel {channel} power: {power} Vmon: {vmon}, Imon: {imon}')
 
     sleep(5)
 
