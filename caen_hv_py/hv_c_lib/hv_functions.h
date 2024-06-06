@@ -13,6 +13,7 @@ int log_out(int sys_handle);
 int get_ch_power(int sys_handle, int slot, int chan);
 
 float get_ch_vmon(int sys_handle, int slot, int chan);
+float get_ch_imon(int sys_handle, int slot, int chan);
 
 int set_ch_v0(int sys_handle, int slot, int chan, float value);
 int set_ch_pw(int sys_handle, int slot, int chan, int value);

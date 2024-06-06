@@ -92,6 +92,20 @@ float get_ch_vmon(int sys_handle, int slot, int chan) {
 }
 
 
+float get_ch_imon(int sys_handle, int slot, int chan) {
+	unsigned short ch_list[] = { chan };
+	float ch_status[1];
+	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, "IMon", 1, ch_list, ch_status);
+	if (ret == CAENHV_OK) {
+		return ch_status[0];
+	}
+	else {
+		printf("Current read bad\n");
+		return -1;
+	}
+}
+
+
 int set_ch_v0(int sys_handle, int slot, int chan, float value) {
 	unsigned short ch_list[] = { chan };
 	float ch_value[] = { value };

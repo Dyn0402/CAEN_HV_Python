@@ -1,6 +1,11 @@
 # CAEN_HV_Python
-Python wrapper around C wrapper for CAEN HV crate control.
-Currently only impelements functions for logging into and out of a CAEN HV crate over IP, reading and setting power status, setting HV target values, and reading HV monitor values.
+Python wrapper around C wrapper for CAEN HV crate control, whose manual is included in the git repository.
+Currently only impelements functions for logging into and out of a CAEN HV crate over IP, reading and setting power status, setting HV target values, reading HV monitor values, and reading current monitor values.
+All reads and writes are currently implemented one channel at a time, though the C wrapper supports reading and writing to multiple channels at once.
+
+The user must specify and pass the crate IP address, username, and password to the CAENHVController initialization.
+It is noted in CAEN C wrapper manual that some models will disconnect if there has been no communication for 15 seconds.
+
 An example implementation is shown below.
 
 ```python
