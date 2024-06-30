@@ -126,3 +126,61 @@ class CAENHVController:
         set_ch_pw.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
         set_ch_pw.restype = ctypes.c_int
         return set_ch_pw(self.sys_handle, slot, channel, pw)
+
+    def get_ch_param_ushort(self, slot, channel, param_name):
+        """
+        Get the value of an unsigned short parameter for a channel. This function calls the C function
+        get_ch_param_ushort with the sys_handle, slot, channel, and param_name parameters and returns the result.
+        :param slot: Slot number of the crate.
+        :param channel: Channel number of the slot.
+        :param param_name: Name of the parameter to get.
+        :return:
+        """
+        get_ch_param_ushort = self.library.get_ch_param_ushort
+        get_ch_param_ushort.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
+        get_ch_param_ushort.restype = ctypes.c_ushort
+        return get_ch_param_ushort(self.sys_handle, slot, channel, param_name)
+
+    def get_ch_param_float(self, slot, channel, param_name):
+        """
+        Get the value of a float parameter for a channel. This function calls the C function get_ch_param_float with the
+        sys_handle, slot, channel, and param_name parameters and returns the result.
+        :param slot: Slot number of the crate.
+        :param channel: Channel number of the slot.
+        :param param_name: Name of the parameter to get.
+        :return:
+        """
+        get_ch_param_float = self.library.get_ch_param_float
+        get_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
+        get_ch_param_float.restype = ctypes.c_float
+        return get_ch_param_float(self.sys_handle, slot, channel, param_name)
+
+    def set_ch_param_ushort(self, slot, channel, param_name, value):
+        """
+        Set the value of an unsigned short parameter for a channel. This function calls the C function
+        set_ch_param_ushort with the sys_handle, slot, channel, param_name, and value parameters and returns the result.
+        :param slot: Slot number of the crate.
+        :param channel: Channel number of the slot.
+        :param param_name: Name of the parameter to set.
+        :param value: Value to set the parameter to.
+        :return:
+        """
+        set_ch_param_ushort = self.library.set_ch_param_ushort
+        set_ch_param_ushort.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_ushort]
+        set_ch_param_ushort.restype = ctypes.c_int
+        return set_ch_param_ushort(self.sys_handle, slot, channel, param_name, value)
+
+    def set_ch_param_float(self, slot, channel, param_name, value):
+        """
+        Set the value of a float parameter for a channel. This function calls the C function set_ch_param_float with the
+        sys_handle, slot, channel, param_name, and value parameters and returns the result.
+        :param slot: Slot number of the crate.
+        :param channel: Channel number of the slot.
+        :param param_name: Name of the parameter to set.
+        :param value: Value to set the parameter to.
+        :return:
+        """
+        set_ch_param_float = self.library.set_ch_param_float
+        set_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_float]
+        set_ch_param_float.restype = ctypes.c_int
+        return set_ch_param_float(self.sys_handle, slot, channel, param_name, value)

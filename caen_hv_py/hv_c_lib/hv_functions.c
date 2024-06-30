@@ -114,6 +114,7 @@ int set_ch_v0(int sys_handle, int slot, int chan, float value) {
 		return 1;
 	}
 	else {
+		printf("Voltage set bad\n");
 		return 0;
 	}
 }
@@ -127,6 +128,62 @@ int set_ch_pw(int sys_handle, int slot, int chan, int value) {
 		return 1;
 	}
 	else {
+		printf("Power set bad\n");
+		return 0;
+	}
+}
+
+
+unsigned short get_ch_param_ushort(int sys_handle, int slot, int chan, char* param_name) {
+	unsigned short ch_list[] = { chan };
+	unsigned short ch_status[1];
+	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, param_name, 1, ch_list, ch_status);
+	if (ret == CAENHV_OK) {
+		return ch_status[0];
+	}
+	else {
+		printf("Parameter read bad\n");
+		return -1;
+	}
+}
+
+
+int set_ch_param_ushort(int sys_handle, int slot, int chan, char* param_name, unsigned short value) {
+	unsigned short ch_list[] = { chan };
+	unsigned short ch_value[] = { value };
+	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, param_name, 1, ch_list, ch_value);
+	if (ret == CAENHV_OK) {
+		return 1;
+	}
+	else {
+		printf("Parameter set bad\n")
+		return 0;
+	}
+}
+
+
+float get_ch_param_float(int sys_handle, int slot, int chan, char* param_name) {
+	unsigned short ch_list[] = { chan };
+	float ch_status[1];
+	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, param_name, 1, ch_list, ch_status);
+	if (ret == CAENHV_OK) {
+		return ch_status[0];
+	}
+	else {
+		printf("Parameter read bad\n");
+		return -1;
+	}
+}
+
+int set_ch_param_float(int sys_handle, int slot, int chan, char* param_name, float value) {
+	unsigned short ch_list[] = { chan };
+	float ch_value[] = { value };
+	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, param_name, 1, ch_list, ch_value);
+	if (ret == CAENHV_OK) {
+		return 1;
+	}
+	else {
+		printf("Parameter set bad\n");
 		return 0;
 	}
 }
