@@ -156,7 +156,7 @@ int set_ch_param_ushort(int sys_handle, int slot, int chan, char* param_name, un
 		return 1;
 	}
 	else {
-		printf("Parameter set bad\n")
+		printf("Parameter set bad\n");
 		return 0;
 	}
 }

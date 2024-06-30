@@ -62,3 +62,39 @@ with CAENHVController(ip_address, username, password) as hv_wrapper:
             hv_wrapper.set_ch_pw(slot, channel, 0)
 
 print('Finshed')
+```
+
+The predefined functions in the example above are tailored to a specific board. 
+A new set of generic functions were added which should allow the user to get and set any parameter by name. 
+There are separate functions for each data type. Unsigned short and float are the only two currently implemented. 
+
+NOTE: If the parameter name is incorrect or not found, these functions will simply retrun their error codes. 
+For the get functions, the error code is -1. For the set functions, the error code is 0 (success is 1).
+
+An example of how to use these functions is shown below.
+
+```python
+from caen_hv_py.CAENHVController import CAENHVController
+from time import sleep
+
+ip_address = '192.168.20.20'  # Enter your CAEN HV Crate IP address
+username = 'user'  # Enter your CAEN HV Crate Username
+password = 'pass'  # Enter your CAEN HV Crate Password
+
+slot = 1
+channel = 2
+
+with CAENHVController(ip_address, username, password) as hv_wrapper:
+    print('Read status')
+    status = hv_wrapper.get_ch_param_ushort(slot, channel, 'Status')
+    print(f'Status: {status}')
+
+    print('Read "Imax Set" float parameter')
+    imax_set = hv_wrapper.get_ch_param_float(slot, channel, 'Imax Set')
+    print(f'Imax Set: {imax_set}')
+    
+    print('Set "Imax Set" float parameter')
+    hv_wrapper.set_ch_param_float(slot, channel, 'Imax Set', 1.2)
+    
+print('Finshed')
+```
