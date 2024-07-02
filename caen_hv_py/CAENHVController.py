@@ -139,7 +139,8 @@ class CAENHVController:
         get_ch_param_ushort = self.library.get_ch_param_ushort
         get_ch_param_ushort.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
         get_ch_param_ushort.restype = ctypes.c_ushort
-        return get_ch_param_ushort(self.sys_handle, slot, channel, param_name)
+        param_name_bytes = param_name.encode('utf-8')
+        return get_ch_param_ushort(self.sys_handle, slot, channel, param_name_bytes)
 
     def get_ch_param_float(self, slot, channel, param_name):
         """
@@ -153,7 +154,8 @@ class CAENHVController:
         get_ch_param_float = self.library.get_ch_param_float
         get_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
         get_ch_param_float.restype = ctypes.c_float
-        return get_ch_param_float(self.sys_handle, slot, channel, param_name)
+        param_name_bytes = param_name.encode('utf-8')
+        return get_ch_param_float(self.sys_handle, slot, channel, param_name_bytes)
 
     def set_ch_param_ushort(self, slot, channel, param_name, value):
         """
@@ -168,7 +170,8 @@ class CAENHVController:
         set_ch_param_ushort = self.library.set_ch_param_ushort
         set_ch_param_ushort.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_ushort]
         set_ch_param_ushort.restype = ctypes.c_int
-        return set_ch_param_ushort(self.sys_handle, slot, channel, param_name, value)
+        param_name_bytes = param_name.encode('utf-8')
+        return set_ch_param_ushort(self.sys_handle, slot, channel, param_name_bytes, value)
 
     def set_ch_param_float(self, slot, channel, param_name, value):
         """
@@ -183,4 +186,5 @@ class CAENHVController:
         set_ch_param_float = self.library.set_ch_param_float
         set_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_float]
         set_ch_param_float.restype = ctypes.c_int
-        return set_ch_param_float(self.sys_handle, slot, channel, param_name, value)
+        param_name_bytes = param_name.encode('utf-8')
+        return set_ch_param_float(self.sys_handle, slot, channel, param_name_bytes, value)

@@ -18,6 +18,7 @@ def main():
 
     with CAENHVController(ip_address, username, password) as hv_wrapper:
         print(hv_wrapper.get_ch_param_float(3, 2, 'VMon'))
+        print(hv_wrapper.get_ch_param_ushort(3, 2, 'Pw'))
 
     print('donzo')
 
