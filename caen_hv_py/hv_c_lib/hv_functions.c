@@ -65,16 +65,16 @@ int log_out(int sys_handle) {
 
 
 int get_ch_power(int sys_handle, int slot, int chan) {
-	unsigned short ch_list[] = { chan };
-	unsigned short ch_status[1];
-	CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_status);
-	if (ret == CAENHV_OK) {
-		return ch_status[0];
-	}
-	else {
-		printf("Power read bad\n");
-		return -1;
-	}
+    unsigned short ch_list[] = { (unsigned short)chan };
+    unsigned long ch_status[1]; // Use unsigned long, not short
+    CAENHVRESULT ret = CAENHV_GetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_status);
+    if (ret == CAENHV_OK) {
+       return (int)ch_status[0];
+    } else {
+       // It's helpful to see the actual error code during debug
+       printf("Power read bad: %s (0x%x)\n", CAENHV_GetError(sys_handle), ret);
+       return -1;
+    }
 }
 
 
@@ -121,16 +121,15 @@ int set_ch_v0(int sys_handle, int slot, int chan, float value) {
 
 
 int set_ch_pw(int sys_handle, int slot, int chan, int value) {
-	unsigned short ch_list[] = { chan };
-	unsigned short ch_value[] = { value };
-	CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_value);
-	if (ret == CAENHV_OK) {
-		return 1;
-	}
-	else {
-		printf("Power set bad\n");
-		return 0;
-	}
+    unsigned short ch_list[] = { (unsigned short)chan };
+    unsigned long ch_value[] = { (unsigned long)value }; // Use unsigned long
+    CAENHVRESULT ret = CAENHV_SetChParam(sys_handle, slot, "Pw", 1, ch_list, ch_value);
+    if (ret == CAENHV_OK) {
+       return 1;
+    } else {
+       printf("Power set bad: %s (0x%x)\n", CAENHV_GetError(sys_handle), ret);
+       return 0;
+    }
 }
 
 

@@ -100,3 +100,58 @@ with CAENHVController(ip_address, username, password) as hv_wrapper:
     
 print('Finshed')
 ```
+
+# Ubuntu 24 Note!
+Many of the dependencies for CAEN's HV Wrapper library are not directly available in Ubuntu 24:
+- libncurses.so.5 is now version 6
+- libtinfo.so.5 is now version 6
+- libcrypto.so.1.1 is now version 3
+
+In addition, when installed with CAENHVWrapper, libcaenhvwrapper.so is installed in /usr/lib64, which is not a library path by default.
+
+## To fix
+The correct versions of the dependencies need to be installed manually and the path updated. AI summary below.
+
+
+#Ubuntu 24.04 (Noble Numbat) Compatibility Note
+Ubuntu 24.04 has deprecated several legacy libraries required by the CAEN HV Wrapper (notably OpenSSL 1.1 and Ncurses 5). To run this software on Ubuntu 24.04, you must manually install the legacy versions from the Ubuntu 22.04 (Jammy) archives and register the CAEN library path.
+
+1. Install Legacy Dependencies
+Run the following commands to download and install the required versions of libssl, libtinfo, and libncurses.
+
+
+# Create a temporary directory for compatibility packages
+mkdir caen_compat && cd caen_compat
+
+# Download OpenSSL 1.1 (Required for libcrypto.so.1.1)
+wget http://security.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.24_amd64.deb
+
+# Download Ncurses 5 and Tinfo 5
+wget http://mirrors.kernel.org/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+wget http://mirrors.kernel.org/ubuntu/pool/universe/n/ncurses/libncurses5_6.3-2ubuntu0.1_amd64.deb
+
+# Install packages
+sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.24_amd64.deb
+sudo dpkg -i libtinfo5_6.3-2ubuntu0.1_amd64.deb
+sudo dpkg -i libncurses5_6.3-2ubuntu0.1_amd64.deb
+
+cd ..
+2. Configure CAEN Library Path
+The CAEN HV Wrapper installer places libraries in /usr/lib64, which is not searched by default in Ubuntu. You must add this path to the dynamic linker configuration:
+
+Bash
+# Add /usr/lib64 to the ld configuration
+sudo sh -c 'echo "/usr/lib64" > /etc/ld.so.conf.d/caen.conf'
+
+# Update the linker cache
+sudo ldconfig
+3. Verify Installation
+Ensure all dependencies are resolved and the CAEN library is recognized:
+
+Bash
+# Check if the CAEN wrapper is mapped correctly
+ldconfig -p | grep caenhv
+
+# Check the binary dependencies (run this in your build folder)
+ldd <your_executable_name> | grep -E "ncurses|tinfo|crypto|caen"
+Warning: These manual installations bypass the standard Ubuntu 24.04 package manager tracking. Keep these .deb files or this documentation handy, as system upgrades may occasionally remove legacy libraries.

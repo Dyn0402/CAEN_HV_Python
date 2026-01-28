@@ -9,6 +9,7 @@ Created as CAEN_HV_Python/power_test.py
 """
 
 from caen_hv_py.CAENHVController import CAENHVController
+from time import sleep
 
 
 def main():
@@ -17,7 +18,15 @@ def main():
     password = 'admin'
 
     with CAENHVController(ip_address, username, password) as hv_wrapper:
+        print(f'Power before: {hv_wrapper.get_ch_power(1, 3)}')
+        print(f'Turning channel on...')
         hv_wrapper.set_ch_pw(1, 3, 1)
+        sleep(0.1)
+        print(f'Power after: {hv_wrapper.get_ch_power(1, 3)}')
+        print(f'Turning channel off...')
+        hv_wrapper.set_ch_pw(1, 3, 0)
+        sleep(0.1)
+        print(f'Power after: {hv_wrapper.get_ch_power(1, 3)}')
     print('donzo')
 
 

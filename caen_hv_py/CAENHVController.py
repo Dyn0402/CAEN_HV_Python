@@ -8,9 +8,16 @@ Created as CAEN_HV_Python/CAENHVController.py
 @author: Dylan Neff, Dylan
 """
 
+import sys
 import ctypes
 import ctypes.util
-from pkg_resources import resource_filename
+
+# Handle version-agnostic resource loading
+if sys.version_info >= (3, 9):
+    from importlib.resources import files, as_file
+else:
+    # This works for Python 3.7 and 3.8
+    from importlib.resources import path as resource_path
 
 
 class CAENHVController:
@@ -23,11 +30,23 @@ class CAENHVController:
     invalid. This is a limitation of the C library.
     """
     def __init__(self, ip_address, username, password):
-        self.library_path = resource_filename('caen_hv_py', 'hv_c_lib/libhv_c.so')
+        # self.library_path = resource_filename('caen_hv_py', 'hv_c_lib/libhv_c.so')
         self.ip_address = ip_address
         self.username = username
         self.password = password
         self.sys_handle = None
+
+        # Determine path compatibly
+        if sys.version_info >= (3, 9):
+            # Modern way (3.9 - 3.12+)
+            source = files('caen_hv_py').joinpath('hv_c_lib/libhv_c.so')
+            self.library_path = str(source)
+        else:
+            # Legacy way (3.7 - 3.8)
+            # Note: in 3.7, 'path' is a context manager, but for simple
+            # filesystem installs, it returns the string path.
+            with resource_path('caen_hv_py.hv_c_lib', 'libhv_c.so') as p:
+                self.library_path = str(p)
 
     def __enter__(self):
         # Load the shared library
@@ -96,36 +115,37 @@ class CAENHVController:
         :param channel:
         :return:
         """
-        get_ch_power = self.library.get_ch_power
-        get_ch_power.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
-        power = get_ch_power(self.sys_handle, slot, channel)
+        get_ch_power_c = self.library.get_ch_power
+        get_ch_power_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        get_ch_power_c.restype = ctypes.c_int  # Crucial: Define the return type
+        power = get_ch_power_c(self.sys_handle, slot, channel)
         return power
 
     def get_ch_vmon(self, slot, channel):
-        get_ch_vmon = self.library.get_ch_vmon
-        get_ch_vmon.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
-        get_ch_vmon.restype = ctypes.c_float
-        vmon = get_ch_vmon(self.sys_handle, slot, channel)
+        get_ch_vmon_c = self.library.get_ch_vmon
+        get_ch_vmon_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        get_ch_vmon_c.restype = ctypes.c_float
+        vmon = get_ch_vmon_c(self.sys_handle, slot, channel)
         return vmon
 
     def get_ch_imon(self, slot, channel):
-        get_ch_imon = self.library.get_ch_imon
-        get_ch_imon.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
-        get_ch_imon.restype = ctypes.c_float
-        imon = get_ch_imon(self.sys_handle, slot, channel)
+        get_ch_imon_c = self.library.get_ch_imon
+        get_ch_imon_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        get_ch_imon_c.restype = ctypes.c_float
+        imon = get_ch_imon_c(self.sys_handle, slot, channel)
         return imon
 
     def set_ch_v0(self, slot, channel, voltage):
-        set_ch_v0 = self.library.set_ch_v0
-        set_ch_v0.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_float]
-        set_ch_v0.restype = ctypes.c_int
-        return set_ch_v0(self.sys_handle, slot, channel, voltage)
+        set_ch_v0_c = self.library.set_ch_v0
+        set_ch_v0_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_float]
+        set_ch_v0_c.restype = ctypes.c_int
+        return set_ch_v0_c(self.sys_handle, slot, channel, voltage)
 
     def set_ch_pw(self, slot, channel, pw):
-        set_ch_pw = self.library.set_ch_pw
-        set_ch_pw.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
-        set_ch_pw.restype = ctypes.c_int
-        return set_ch_pw(self.sys_handle, slot, channel, pw)
+        set_ch_pw_c = self.library.set_ch_pw
+        set_ch_pw_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        set_ch_pw_c.restype = ctypes.c_int
+        return set_ch_pw_c(self.sys_handle, slot, channel, pw)
 
     def get_ch_param_ushort(self, slot, channel, param_name):
         """
@@ -136,11 +156,11 @@ class CAENHVController:
         :param param_name: Name of the parameter to get.
         :return:
         """
-        get_ch_param_ushort = self.library.get_ch_param_ushort
-        get_ch_param_ushort.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
-        get_ch_param_ushort.restype = ctypes.c_ushort
+        get_ch_param_ushort_c = self.library.get_ch_param_ushort
+        get_ch_param_ushort_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
+        get_ch_param_ushort_c.restype = ctypes.c_ushort
         param_name_bytes = param_name.encode('utf-8')
-        return get_ch_param_ushort(self.sys_handle, slot, channel, param_name_bytes)
+        return get_ch_param_ushort_c(self.sys_handle, slot, channel, param_name_bytes)
 
     def get_ch_param_float(self, slot, channel, param_name):
         """
@@ -151,11 +171,11 @@ class CAENHVController:
         :param param_name: Name of the parameter to get.
         :return:
         """
-        get_ch_param_float = self.library.get_ch_param_float
-        get_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
-        get_ch_param_float.restype = ctypes.c_float
+        get_ch_param_float_c = self.library.get_ch_param_float
+        get_ch_param_float_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p]
+        get_ch_param_float_c.restype = ctypes.c_float
         param_name_bytes = param_name.encode('utf-8')
-        return get_ch_param_float(self.sys_handle, slot, channel, param_name_bytes)
+        return get_ch_param_float_c(self.sys_handle, slot, channel, param_name_bytes)
 
     def set_ch_param_ushort(self, slot, channel, param_name, value):
         """
@@ -167,11 +187,11 @@ class CAENHVController:
         :param value: Value to set the parameter to.
         :return:
         """
-        set_ch_param_ushort = self.library.set_ch_param_ushort
-        set_ch_param_ushort.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_ushort]
-        set_ch_param_ushort.restype = ctypes.c_int
+        set_ch_param_ushort_c = self.library.set_ch_param_ushort
+        set_ch_param_ushort_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_ushort]
+        set_ch_param_ushort_c.restype = ctypes.c_int
         param_name_bytes = param_name.encode('utf-8')
-        return set_ch_param_ushort(self.sys_handle, slot, channel, param_name_bytes, value)
+        return set_ch_param_ushort_c(self.sys_handle, slot, channel, param_name_bytes, value)
 
     def set_ch_param_float(self, slot, channel, param_name, value):
         """
@@ -183,8 +203,8 @@ class CAENHVController:
         :param value: Value to set the parameter to.
         :return:
         """
-        set_ch_param_float = self.library.set_ch_param_float
-        set_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_float]
-        set_ch_param_float.restype = ctypes.c_int
+        set_ch_param_float_c = self.library.set_ch_param_float
+        set_ch_param_float_c.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_float]
+        set_ch_param_float_c.restype = ctypes.c_int
         param_name_bytes = param_name.encode('utf-8')
-        return set_ch_param_float(self.sys_handle, slot, channel, param_name_bytes, value)
+        return set_ch_param_float_c(self.sys_handle, slot, channel, param_name_bytes, value)
