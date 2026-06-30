@@ -147,6 +147,38 @@ class CAENHVController:
         set_ch_pw_c.restype = ctypes.c_int
         return set_ch_pw_c(self.sys_handle, slot, channel, pw)
 
+    def get_ch_i0set(self, slot, channel):
+        """Get the current limit (I0Set) of a channel. Returns a float."""
+        return self.get_ch_param_float(slot, channel, 'I0Set')
+
+    def set_ch_i0set(self, slot, channel, current):
+        """Set the current limit (I0Set) of a channel."""
+        return self.set_ch_param_float(slot, channel, 'I0Set', current)
+
+    def get_ch_rup(self, slot, channel):
+        """Get the ramp-up rate (Rup, V/s) of a channel. Returns a float."""
+        return self.get_ch_param_float(slot, channel, 'Rup')
+
+    def set_ch_rup(self, slot, channel, rate):
+        """Set the ramp-up rate (Rup, V/s) of a channel."""
+        return self.set_ch_param_float(slot, channel, 'Rup', rate)
+
+    def get_ch_rdwn(self, slot, channel):
+        """Get the ramp-down rate (RDWn, V/s) of a channel. Returns a float."""
+        return self.get_ch_param_float(slot, channel, 'RDWn')
+
+    def set_ch_rdwn(self, slot, channel, rate):
+        """Set the ramp-down rate (RDWn, V/s) of a channel."""
+        return self.set_ch_param_float(slot, channel, 'RDWn', rate)
+
+    def get_ch_trip(self, slot, channel):
+        """Get the trip time (Trip, seconds) of a channel. Returns a float."""
+        return self.get_ch_param_float(slot, channel, 'Trip')
+
+    def set_ch_trip(self, slot, channel, seconds):
+        """Set the trip time (Trip, seconds) of a channel."""
+        return self.set_ch_param_float(slot, channel, 'Trip', seconds)
+
     def get_ch_param_ushort(self, slot, channel, param_name):
         """
         Get the value of an unsigned short parameter for a channel. This function calls the C function
