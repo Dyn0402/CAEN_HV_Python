@@ -29,7 +29,7 @@ int get_crate_map(int sys_handle, int verbose) {
 	CAENHVRESULT ret = CAENHV_GetCrateMap(sys_handle, &NrOfSl, &NrOfCh, &ModelList, &DescriptionList, &SerNumList,
 		&FmwRelMinList, &FmwRelMaxList);
 
-    if (ret == CAENHV_OK) {
+	if (ret == CAENHV_OK) {
 		if (verbose) {
 			printf("Crate Map good\n");
 			printf("Number of slots: %d\n", NrOfSl);
@@ -43,12 +43,21 @@ int get_crate_map(int sys_handle, int verbose) {
 				printf("Number of channels: %d\n", NrOfCh[i]);
 			}
 		}
+		// CAENHV_GetCrateMap allocates these lists; the caller must release them
+		// with CAENHV_Free. This function doubles as the liveness/keepalive probe
+		// so it can be called often -- without these frees it leaks on every call.
+		CAENHV_Free(NrOfCh);
+		CAENHV_Free(ModelList);
+		CAENHV_Free(DescriptionList);
+		CAENHV_Free(SerNumList);
+		CAENHV_Free(FmwRelMinList);
+		CAENHV_Free(FmwRelMaxList);
 		return 1;
 	}
-    else {
+	else {
 		printf("Crate Map bad\n");
 		return 0;
-    }
+	}
 }
 
 
