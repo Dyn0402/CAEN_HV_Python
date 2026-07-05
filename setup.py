@@ -17,15 +17,22 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='caen_hv_py',
-    version='1.11',
+    version='2.0.0',
     description='Python wrapper for CAEN High Voltage C library.',
     author='Dylan Neff',
     author_email='dneff@ucla.edu',
     url='https://github.com/Dyn0402/CAEN_HV_Python',
     packages=['caen_hv_py'],
     package_data={'caen_hv_py': ['hv_c_lib/*', 'tests/*.py']},
+    python_requires='>=3.7',
     install_requires=[
         'importlib-resources; python_version < "3.9"',
+    ],
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'Operating System :: POSIX :: Linux',
+        'Topic :: Scientific/Engineering :: Physics',
+        'Intended Audience :: Science/Research',
     ],
     long_description=long_description,
     long_description_content_type='text/markdown'

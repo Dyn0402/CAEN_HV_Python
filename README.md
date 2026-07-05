@@ -254,3 +254,50 @@ ldd <your_executable_name> | grep -E "ncurses|tinfo|crypto|caen"
 
 > [!WARNING]
 > These manual installations bypass standard Ubuntu 24.04 package tracking. Keep these `.deb` files (or this documentation) handy, as system upgrades may remove the legacy libraries.
+
+## Resilient sessions (v2.0)
+
+The CAEN HV Wrapper session is dropped after **~15 s with no calls** — the
+`sys_handle` goes invalid and subsequent calls fail (reads return `-1`, and the
+library prints things like `CFE server down`). As of v2.0 `CAENHVController`
+owns the session and heals itself, so you don't have to babysit it.
+
+- **Auto-reconnect (default on):** a call that fails because the session died is
+  transparently re-logged-in and retried once — the caller just gets the value.
+- **Keepalive (opt-in):** pass `keepalive_s=10` and a background thread touches
+  the crate every 10 s so the handle never goes stale in the first place.
+- **Typed errors (default):** unrecoverable failures raise `CAENConnectionError`
+  (session dead/unreachable) or `CAENCommandError` (a get/set failed on a live
+  session) instead of returning an ambiguous `-1`. Pass `raise_on_error=False`
+  for the legacy sentinel behaviour.
+- **Thread-safe:** all calls are serialised internally, so a monitor loop, a
+  keepalive tick and a set can run from different threads safely.
+
+```python
+from caen_hv_py import CAENHVController, CAENConnectionError
+
+# Keep the handle warm and self-heal if it ever drops:
+with CAENHVController(ip, user, pw, keepalive_s=10) as hv:
+    hv.set_ch_v0(5, 1, 480.0)
+    print(hv.get_ch_vmon(5, 1))   # never spuriously -1 across an idle gap
+
+# Or probe/heal explicitly before a batch of operations:
+with CAENHVController(ip, user, pw) as hv:
+    hv.ensure_alive()             # reconnects if the session died
+    ...
+```
+
+Existing code (`with CAENHVController(ip, user, pw) as hv: ...`) keeps working
+unchanged and gains auto-reconnect for free.
+
+### Tests
+
+Session/reconnect/keepalive logic is covered by hardware-free unit tests that
+use a fake C library reproducing the 15 s drop on a manual clock:
+
+```bash
+python -m unittest caen_hv_py.tests.test_resilience -v
+```
+
+See `CHANGELOG.md` for the full v2.0 notes and `docs/C_LAYER_NOTES.md` for the
+remaining C-layer follow-ups (they require the CAEN SDK to recompile).

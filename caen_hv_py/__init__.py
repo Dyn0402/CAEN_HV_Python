@@ -1,11 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on April 26 9:31 AM 2024
-Created in PyCharm
-Created as CAEN_HV_Python/__init__.py
+caen_hv_py — Python wrapper for the CAEN High Voltage C library.
 
-@author: Dylan Neff, Dylan
+See CAENHVController for the resilient (auto-reconnecting) session wrapper.
 """
 
+from .CAENHVController import CAENHVController
+from .exceptions import CAENHVError, CAENConnectionError, CAENCommandError
 
+__version__ = "2.0.0"
+
+__all__ = [
+    "CAENHVController",
+    "CAENHVError",
+    "CAENConnectionError",
+    "CAENCommandError",
+    "__version__",
+]
