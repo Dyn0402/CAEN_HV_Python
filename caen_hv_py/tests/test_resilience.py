@@ -40,6 +40,19 @@ class TestBasics(unittest.TestCase):
         with self.assertRaises(CAENConnectionError):
             ctrl.connect()
 
+    def test_connect_loads_library_without_context_manager(self):
+        """Regression: a direct connect() (no `with`) must load libhv_c.so
+        itself. Previously only __enter__ loaded it, so standalone
+        connect()/reconnect() hit `AttributeError: 'NoneType'.log_in`."""
+        fake = FakeHVLib(clock=FakeClock())
+        ctrl = CAENHVController("1.2.3.4", "user", "pw", reconnect_backoff_s=0)
+        self.assertIsNone(ctrl.library)          # not loaded until connect()
+        ctrl._load_cdll = lambda: fake           # stand in for the real .so load
+        ctrl.connect()                           # must not raise
+        self.assertIs(ctrl.library, fake)
+        self.assertTrue(ctrl.is_alive())
+        ctrl.close()
+
 
 class TestReconnect(unittest.TestCase):
     def test_idle_drop_autoreconnects_transparently(self):

@@ -108,6 +108,7 @@ class CAENHVController:
 
         self.library = library
         self._injected_library = library is not None
+        self._prototypes_bound = False
         self._lock = threading.RLock()
         self._closed = False
         self._reconnects = 0  # diagnostics: how many times the session was rebuilt
@@ -156,12 +157,28 @@ class CAENHVController:
         lib.set_ch_param_float.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_float]
         lib.set_ch_param_float.restype = ctypes.c_int
 
+    def _load_cdll(self):
+        """Load the bundled C library. Split out so tests can stub the load
+        without a real .so / the CAEN SDK present."""
+        return ctypes.CDLL(self.library_path)
+
+    def _ensure_library_loaded(self):
+        """Load libhv_c.so and bind its ctypes prototypes exactly once.
+
+        Idempotent, so connect()/reconnect() work whether or not the object was
+        opened as a context manager. Previously only __enter__ loaded the
+        library, so a direct connect()/reconnect() hit ``self.library is None``.
+        An injected (duck-typed) library is left untouched.
+        """
+        if self.library is None and not self._injected_library:
+            self.library = self._load_cdll()
+        if isinstance(self.library, ctypes.CDLL) and not self._prototypes_bound:
+            self._bind_prototypes()
+            self._prototypes_bound = True
+
     # ------------------------------------------------------ context management
     def __enter__(self):
-        if not self._injected_library:
-            self.library = ctypes.CDLL(self.library_path)
-        if isinstance(self.library, ctypes.CDLL):
-            self._bind_prototypes()
+        self._ensure_library_loaded()
         self.connect()
         if self.keepalive_s:
             self.start_keepalive()
@@ -174,6 +191,7 @@ class CAENHVController:
     def connect(self):
         """(Re)establish the session. Raises CAENConnectionError on failure."""
         with self._lock:
+            self._ensure_library_loaded()
             self._closed = False
             handle = self._raw_login()
             if handle is None or handle < 0:
